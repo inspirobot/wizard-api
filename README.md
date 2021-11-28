@@ -1,5 +1,5 @@
-# simple-express-crud-api
-This is just a simple CRUD API of Books made with Express. The aim is to provide an API as starting point to other implementations or tests.
+# wizard-api
+API for wizard made with Express and Swagger. This will be merged with the wizard game when it is ready. 
 
 To start it, install Node and run:
 
