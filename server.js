@@ -11,7 +11,7 @@ app.use(
 );
 app.use(bodyParser.json());
 
-app.use("/books", require("./routes/books"));
+app.use("/game", require("./routes/game"));
 
 const options = {
   definition: {

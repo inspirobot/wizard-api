@@ -1,4 +1,4 @@
-const books = [
+const games = [
 	{
 		id: 1,
 		title: "The Pragmatic Programmer",
@@ -36,4 +36,4 @@ const books = [
 	},
 ];
 
-module.exports = books;
+module.exports = games;
