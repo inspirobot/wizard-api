@@ -11,7 +11,8 @@ app.use(
 );
 app.use(bodyParser.json());
 
-app.use("/game", require("./routes/game"));
+app.use("/wizard", require("./routes/wizard"));
+app.use("/lobby", require("./routes/lobby"));
 
 const options = {
   definition: {
@@ -42,7 +43,7 @@ const options = {
 
 const specs = swaggerJsdoc(options);
 app.use(
-  "/api-docs",
+  "/api",
   swaggerUi.serve,
   swaggerUi.setup(specs, { explorer: true })
 );

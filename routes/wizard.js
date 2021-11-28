@@ -2,17 +2,9 @@
  * @swagger
  *   components:
  *     schemas:
- *       Game:
+ *       WizardSettings:
  *         type: object
- *         properties:
- *           id:
- *             type: string
- *             format: guid
- *             description: The auto-generated id of the game.
- *           players:
- *             type: array
- *             items: 
- *               type: object
+ *         properties:    
  *           numberOfWizards:
  *             type: integer
  *             description: The number of wizards in the game
@@ -24,16 +16,8 @@
  *             items:
  *               type: integer
  *             description: List of rounds to play
- *           createdAt:
- *             type: string
- *             format: date-time
- *             description: The date of the game creation.
- *         example:
- *           id: 7
- *           author: Andy Hunt / Dave Thomas
- *           finished: true
- *           createdAt: 2021-11-26T19:22:31.657Z
- *       GameState:
+ *             
+ *       WizardGameState:
  *         type: object
  *         properties:
  *           round: 
@@ -76,67 +60,18 @@
  * 
  * @swagger
  * tags:
- *   name: Game
- *   description: API to manage your games.
+ *   name: Wizard
+ *   description: API specific to the game of Wizard.
  * 
  */
 
 /**
  * 
    * @swagger
-   * /game/:
-   *   get:
-   *     summary: Lists all the games
-   *     tags: [Game]
-   *     responses:
-   *       "200":
-   *         description: The list of games.
-   *         content:
-   *           application/json:
-   *             schema:
-   *               $ref: '#/components/schemas/Game'
-   *   post:
-   *     summary: Creates a new game
-   *     tags: [Game]
-   *     requestBody:
-   *       required: true
-   *       content:
-   *         application/json:
-   *           schema:
-   *             $ref: "#/components/schemas/Game"
-   *     responses:
-   *       "201":
-   *         description: The created game.
-   *         content:
-   *           application/json:
-   *             schema:
-   *               $ref: "#/components/schemas/Game"
-   * 
-   * /game/{id}:
-   *   get:
-   *     summary: Gets a game by id
-   *     tags: [Game]
-   *     parameters:
-   *       - in: path
-   *         name: id
-   *         schema:
-   *           type: string
-   *           format: uuid
-   *         required: true
-   *         description: The game id
-   *     responses:
-   *       "200":
-   *         description: The game settings.
-   *         content:
-   *           application/json:
-   *             schema:
-   *               $ref: '#/components/schemas/Game'
-   *       "404":
-   *         description: Game not found.
-   * /game/{id}/state:
+   * /wizard/{id}/state:
    *   get:
    *     summary: Gets the current state of the game
-   *     tags: [Game]
+   *     tags: [Wizard]
    *     parameters:
    *       - in: path
    *         name: id
@@ -155,7 +90,7 @@
    *         content:
    *           application/json:
    *             schema:
-   *               $ref: '#/components/schemas/GameState'
+   *               $ref: '#/components/schemas/WizardGameState'
    *       "404":
    *         description: Game not found.
  */
@@ -166,32 +101,12 @@ const router = express.Router();
 
 const games = require("../util/data");
 
-router.get("/", function (req, res) {
-    res.status(200).json(games);
-});
-
-router.get("/:id", function (req, res) {
-    let game = gamess.find(function (item) {
+router.get("/:id/state", function (req, res) {
+    let game = games.find(function (item) {
         return item.id == req.params.id;
     });
 
-    book ? res.status(200).json(book) : res.sendStatus(404);
-});
-
-router.post("/", function (req, res) {
-    const { title, author, finished } = req.body;
-
-    let game = {
-        id: games.length + 1,
-        title: title,
-        author: author,
-        finished: finished !== undefined ? finished : false,
-        createdAt: new Date(),
-    };
-
-    games.push(game);
-
-    res.status(201).json(game);
+    book ? res.status(200).json(game) : res.sendStatus(404);
 });
 
 
