@@ -1,6 +1,11 @@
 /** 
  *@swagger
  *  components:
+ *    securitySchemes:
+ *     bearerAuth:            # arbitrary name for the security scheme
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT 
  *    schemas:
  *      Player:
  *        type: object
@@ -78,6 +83,8 @@
    *             schema:
    *               $ref: '#/components/schemas/Game'
    *   post:
+   *     security:
+   *       - bearerAuth: []    
    *     summary: Creates a new game
    *     tags: [Lobby]
    *     requestBody:
@@ -126,6 +133,8 @@
    *
    * /lobby/{id}/start:
    *   put:
+   *     security:
+   *       - bearerAuth: []    
    *     summary: Starts a game
    *     tags: [Lobby]
    *     parameters:
@@ -143,6 +152,28 @@
    *         description: Not modified. Game already started.
    *       "404":
    *         description: Game not found.
+   * /lobby/{id}/join:
+   *   put:
+   *     security:
+   *       - bearerAuth: []    
+   *     summary: Join a game
+   *     tags: [Lobby]
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         schema:
+   *           type: string
+   *           format: uuid
+   *         required: true
+   *         description: The game id to join
+   *     responses:
+   *       "204":
+   *         description: No content returned. Game successfully joined.
+   *       "304":
+   *         description: Not modified. Game already started.
+   *       "404":
+   *         description: Game not found.
+
 */
 
 
