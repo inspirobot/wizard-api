@@ -36,6 +36,9 @@ const options = {
       {
         url: "http://localhost:3000/",
       },
+      {
+        url: "http://game-wizard.herokuapp.com/",
+      },
     ],
   },
   apis: ["./routes/*.js"],
