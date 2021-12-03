@@ -99,8 +99,10 @@
    *               settings:
    *                 type: object 
    *             example:   # Sample object
-   *               id: 10
-   *               name: Jessica Smith
+   *               settings: {
+   *                 NumberOfWizards : 4  
+   *               }
+   *               
    *     responses:
    *       "201":
    *         description: The created game.
@@ -143,7 +145,7 @@
    *         name: id
    *         schema:
    *           type: string
-   *           format: uuid
+   * #          format: uuid
    *         required: true
    *         description: The game id
    *     responses:
@@ -167,7 +169,7 @@
    *         name: id
    *         schema:
    *           type: string
-   *           format: uuid
+   * #          format: uuid
    *         required: true
    *         description: The game id to start
    *     responses:
@@ -188,7 +190,7 @@
    *         name: id
    *         schema:
    *           type: string
-   *           format: uuid
+   * #          format: uuid
    *         required: true
    *         description: The game id to join
    *     responses:
@@ -209,7 +211,7 @@
    *         name: id
    *         schema:
    *           type: string
-   *           format: uuid
+   * #          format: uuid
    *         required: true
    *         description: The game id to leave
    *     responses:
@@ -230,9 +232,20 @@
    *         name: id
    *         schema:
    *           type: string
-   *           format: uuid
+   * #          format: uuid
    *         required: true
    *         description: The game id
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:      # Request body contents
+   *             type: object
+   *             properties:
+   *               playerId:
+   *                 type: integer
+   *             example:   # Sample object
+   *               playerId: 1
    *     responses:
    *       "204":
    *         description: No content returned. Game successfully joined.
@@ -296,7 +309,7 @@ router.get("/:id", function (req, res) {
         return item.id == req.params.id;
     });
 
-    book ? res.status(200).json(game) : res.sendStatus(404);
+    game ? res.status(200).json(game) : res.sendStatus(404);
 });
 
 router.put("/:id/join", auth.verifyToken, async function (req, res) {
@@ -316,20 +329,21 @@ router.put("/:id/join", auth.verifyToken, async function (req, res) {
     }
 });
 
-router.put("/:id/leave", auth.verifyToken, async function (req, res) {
+router.put("/:id/kick", auth.verifyToken, async function (req, res) {
+    const { playerId } = req.body;
+
     let game = await games.find(function (item) {
         return item.id == req.params.id;
     });
 
     if (game) {
-        if (game.status === "open") {
-            const index = array.indexOf(game.players.includes(req.authdata.user.id));
-            if (index > -1) {
-                game.players.splice(index, 1);
-                res.sendStatus(204);      
+        if (game.status === "open" && game.creator === req.authdata.user.id) {
+            if (game.players.includes(playerId)) {
+                game.players.splice(game.players.indexOf(req.authdata.user.id), 1);
+                res.sendStatus(204); 
             } else {
                 res.sendStatus(304);
-            } 
+            }      
         } else {
             res.sendStatus(304);
         }
@@ -337,6 +351,24 @@ router.put("/:id/leave", auth.verifyToken, async function (req, res) {
         res.sendStatus(404);
     }     
 });
+
+router.put("/:id/leave", auth.verifyToken, async function (req, res) {
+    let game = await games.find(function (item) {
+        return item.id == req.params.id;
+    });
+
+    if (game) {
+        if (game.status === "open" && game.players.includes(req.authdata.user.id)) {
+            game.players.splice(game.players.indexOf(req.authdata.user.id), 1);
+            res.sendStatus(204);      
+        } else {
+            res.sendStatus(304);
+        }
+    } else {
+        res.sendStatus(404);
+    }     
+});
+
 
 router.put("/:id/start", auth.verifyToken, async function (req, res) {
     let game = await games.find(function (item) {
