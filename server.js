@@ -37,7 +37,7 @@ const options = {
         url: "http://localhost:3000/",
       },
       {
-        url: "http://game-wizard.herokuapp.com/",
+        url: "https://game-wizard.herokuapp.com/",
       },
     ],
   },
