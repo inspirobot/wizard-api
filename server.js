@@ -3,7 +3,11 @@ var express = require("express"),
   swaggerJsdoc = require("swagger-jsdoc"),
   swaggerUi = require("swagger-ui-express");
 
+
 const app = express();
+const cors = require('cors');
+
+app.use(cors);
 app.use(
   bodyParser.urlencoded({
     extended: true,
