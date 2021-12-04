@@ -4,10 +4,11 @@ var express = require("express"),
   swaggerUi = require("swagger-ui-express");
 
 
-const app = express();
 const cors = require('cors');
+const app = express();
+app.use(cors());
+app.options('*', cors());  // enable pre-flight
 
-app.use(cors);
 app.use(
   bodyParser.urlencoded({
     extended: true,
@@ -38,7 +39,7 @@ const options = {
     },
     servers: [
       {
-        url: "http://localhost:3000/",
+        url: "http://localhost:3003/",
       },
       {
         url: "https://game-wizard.herokuapp.com/",
@@ -55,7 +56,7 @@ app.use(
   swaggerUi.setup(specs, { explorer: true })
 );
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3003;
 app.listen(PORT);
 
 console.debug("Server listening on port: " + PORT);
